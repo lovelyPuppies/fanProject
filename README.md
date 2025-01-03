@@ -1,10 +1,11 @@
 # Fan Project
 
-📅 Written at 2025-01-02 15:00:12
+📅 Written at 2025-01-03 09:44:20
 
 - [Fan Project](#fan-project)
   - [Project Introduction](#project-introduction)
-    - [🎯 Project Purposes](#-project-purposes)
+    - [Features](#features)
+    - [🎯 Purposes](#-purposes)
     - [🖼️ Hardware Setup](#️-hardware-setup)
       - [Breadboard Setup](#breadboard-setup)
     - [🎥 Fan Machine Demo](#-fan-machine-demo)
@@ -25,7 +26,15 @@
 
 ## Project Introduction
 
-### 🎯 Project Purposes
+### Features
+
+- 전원 제어: 선풍기 전원을 켜거나 끌 수 있음.
+- 팬 속도 조절: 저속, 중속, 고속으로 팬 속도를 변경 가능.
+- 모드 전환: 수동 모드와 자동 모드 간 전환 가능.
+- 타이머 설정: 3, 5, 7분 타이머 설정으로 자동 종료.
+- 상태 표시: LCD 및 FND로 현재 모드, 속도, 타이머 상태 표시.
+
+### 🎯 Purposes
 
 - **C 언어 코드 모듈화 및 구조화**
 
