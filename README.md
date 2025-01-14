@@ -10,6 +10,9 @@
       - [Breadboard Setup](#breadboard-setup)
     - [🎥 Fan Machine Demo](#-fan-machine-demo)
   - [🌐 Project Overview](#-project-overview)
+    - [FSM (Finite State Machine)](#fsm-finite-state-machine)
+      - [🎛️ Inputs (Button Definitions)](#️-inputs-button-definitions)
+      - [📊 Diagram](#-diagram)
     - [🛠️ Tools](#️-tools)
       - [\[🧑‍💻 Software\]](#-software)
       - [\[🖥️ Hardware\]](#️-hardware)
@@ -18,9 +21,6 @@
       - [Layer Overview](#layer-overview)
       - [Applied Design Pattern](#applied-design-pattern)
       - [❗ Benefits of the MVP + Service Pattern](#-benefits-of-the-mvp--service-pattern)
-    - [FSM (Finite State Machine)](#fsm-finite-state-machine)
-      - [🎛️ Inputs (Button Definitions)](#️-inputs-button-definitions)
-      - [📊 Diagram](#-diagram)
   - [Retrospective](#retrospective)
     - [📌 Key Learnings and Improvements](#-key-learnings-and-improvements)
 
@@ -78,6 +78,66 @@ _Click on the image above to watch the full demo on [YouTube](https://youtu.be/h
 ---
 
 ## 🌐 Project Overview
+
+### FSM (Finite State Machine)
+
+📝 **Note**: State remains unchanged unless an explicit transition is defined.
+
+#### 🎛️ Inputs (Button Definitions)
+
+| **Button** | **Functionality**                                          |
+| ---------- | ---------------------------------------------------------- |
+| **B1**     | Toggle system power (On/Off)                               |
+| **B2**     | Adjust fan speed (Manual or Auto mode)                     |
+| **B3**     | Toggle between Auto mode and Manual mode (entry point)     |
+| **B4**     | Set shutdown timer (None, 3 minutes, 5 minutes, 7 minutes) |
+
+---
+
+#### 📊 Diagram
+
+```mermaid
+stateDiagram-v2
+
+  [*] --> Off
+  state "On" as On {
+    [*] --> On_Manual
+
+    state "Manual" as On_Manual {
+
+      state "Speed" as On_Manual_Speed {
+        direction LR
+        [*] --> Low
+
+        Low: Low
+        Medium: Medium
+        High: High
+
+
+        Low --> Medium: B2 | USART
+        Medium --> High: B2 | USART
+        High --> Low: B2 | USART
+      }
+
+    }
+
+    state "Auto" as On_Auto {
+      direction LR
+      [*] --> Type1
+      Type1: Type1
+      Type2: Type2
+
+      Type1 --> Type2: B2 | USART
+      Type2 --> Type1: B2 | USART
+
+    }
+
+    On_Manual --> On_Auto: B3 | UART
+    On_Auto --> On_Manual: B3 | UART
+  }
+  On --> Off: B1 | B4 | USART
+  Off --> On: B1 | USART
+```
 
 ### 🛠️ Tools
 
@@ -233,66 +293,6 @@ The **Model-View-Presenter (MVP) + Service** pattern is used in the `app/fanMach
    - Adding new features (e.g., additional fan modes or advanced timers) is straightforward due to the layered architecture.
 
 ---
-
-### FSM (Finite State Machine)
-
-📝 **Note**: State remains unchanged unless an explicit transition is defined.
-
-#### 🎛️ Inputs (Button Definitions)
-
-| **Button** | **Functionality**                                          |
-| ---------- | ---------------------------------------------------------- |
-| **B1**     | Toggle system power (On/Off)                               |
-| **B2**     | Adjust fan speed (Manual or Auto mode)                     |
-| **B3**     | Toggle between Auto mode and Manual mode (entry point)     |
-| **B4**     | Set shutdown timer (None, 3 minutes, 5 minutes, 7 minutes) |
-
----
-
-#### 📊 Diagram
-
-```mermaid
-stateDiagram-v2
-
-  [*] --> Off
-  state "On" as On {
-    [*] --> On_Manual
-
-    state "Manual" as On_Manual {
-
-      state "Speed" as On_Manual_Speed {
-        direction LR
-        [*] --> Low
-
-        Low: Low
-        Medium: Medium
-        High: High
-
-
-        Low --> Medium: B2 | USART
-        Medium --> High: B2 | USART
-        High --> Low: B2 | USART
-      }
-
-    }
-
-    state "Auto" as On_Auto {
-      direction LR
-      [*] --> Type1
-      Type1: Type1
-      Type2: Type2
-
-      Type1 --> Type2: B2 | USART
-      Type2 --> Type1: B2 | USART
-
-    }
-
-    On_Manual --> On_Auto: B3 | UART
-    On_Auto --> On_Manual: B3 | UART
-  }
-  On --> Off: B1 | B4 | USART
-  Off --> On: B1 | USART
-```
 
 ## Retrospective
 
