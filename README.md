@@ -14,8 +14,8 @@
       - [🎛️ Inputs (Button Definitions)](#️-inputs-button-definitions)
       - [📊 Diagram](#-diagram)
     - [🛠️ Tools](#️-tools)
-      - [\[🧑‍💻 Software\]](#-software)
-      - [\[🖥️ Hardware\]](#️-hardware)
+      - [🧑‍💻 Software](#-software)
+      - [🖥️ Hardware](#️-hardware)
     - [📁 Directory Structure](#-directory-structure)
     - [📖 Design Patterns and Benefits](#-design-patterns-and-benefits)
       - [Layer Overview](#layer-overview)
@@ -141,12 +141,12 @@ stateDiagram-v2
 
 ### 🛠️ Tools
 
-#### [🧑‍💻 Software]
+#### 🧑‍💻 Software
 
 - **IDE**: Microchip Studio
 - **Programming Language**: C
 
-#### [🖥️ Hardware]
+#### 🖥️ Hardware
 
 - **Processor**: AVR Atmega128/A (RISC) (1 EM)
 - **LCD Module**: TC1602A-01T (1 EM)
