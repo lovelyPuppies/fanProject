@@ -20,7 +20,7 @@
     - [📖 Design Patterns and Benefits](#-design-patterns-and-benefits)
       - [Layer Overview](#layer-overview)
       - [Applied Design Pattern](#applied-design-pattern)
-      - [❗ Benefits of the MVP + Service Pattern](#-benefits-of-the-mvp--service-pattern)
+      - [❗ Advantages of MVP + Service Pattern](#-advantages-of-mvp--service-pattern)
   - [Retrospective](#retrospective)
     - [📌 Key Learnings and Improvements](#-key-learnings-and-improvements)
 
@@ -81,16 +81,16 @@ _Click on the image above to watch the full demo on [YouTube](https://youtu.be/h
 
 ### FSM (Finite State Machine)
 
-📝 **Note**: State remains unchanged unless an explicit transition is defined.
+📝 **참고**: 명시적인 전환이 정의되지 않는 한 상태는 변경되지 않음.
 
 #### 🎛️ Inputs (Button Definitions)
 
-| **Button** | **Functionality**                                          |
-| ---------- | ---------------------------------------------------------- |
-| **B1**     | Toggle system power (On/Off)                               |
-| **B2**     | Adjust fan speed (Manual or Auto mode)                     |
-| **B3**     | Toggle between Auto mode and Manual mode (entry point)     |
-| **B4**     | Set shutdown timer (None, 3 minutes, 5 minutes, 7 minutes) |
+| **버튼** | **기능**                                  |
+| -------- | ----------------------------------------- |
+| **B1**   | 시스템 전원 토글 (켜기/끄기)              |
+| **B2**   | 팬 속도 조정 (수동 또는 자동 모드)        |
+| **B3**   | 자동 모드와 수동 모드 간 토글 (진입 지점) |
+| **B4**   | 종료 타이머 설정 (없음, 3분, 5분, 7분)    |
 
 ---
 
@@ -195,23 +195,23 @@ stateDiagram-v2
 
 #### Layer Overview
 
-| Layer             | Description                                                                  | Matching Directory                              |
-| ----------------- | ---------------------------------------------------------------------------- | ----------------------------------------------- |
-| Application Layer | User application logic. Controls devices and system flow.                    | `app/`                                          |
-| OS/RTOS           | Operating system or real-time OS (if applicable).                            | `<None>`                                        |
-| Devices Layer     | Manages external devices (motor, buzzer, button, lcd, fnd).                  | `peripheral/` (motor, buzzer, button, lcd, fnd) |
-| HAL/Drivers       | Initializes hardware and controls MCU peripherals (GPIO, Timer, UART, etc.). | `driver/` (gpio, timer, uart, pwm)              |
-| Hardware          | Physical hardware (MCU, sensors, etc.).                                      | AVR Atmega128/A, TC1602A-01T, etc.              |
+| Layer             | Description                                                   | Matching Directory                              |
+| ----------------- | ------------------------------------------------------------- | ----------------------------------------------- |
+| Application Layer | 사용자 어플리케이션 로직. 장치와 시스템 흐름 제어             | `app/`                                          |
+| OS/RTOS           | 운영 체제 또는 실시간 OS (Optional).                          | `<None>`                                        |
+| Devices Layer     | 외부 장치 관리 (모터, 버저, 버튼, LCD, FND)                   | `peripheral/` (motor, buzzer, button, lcd, fnd) |
+| HAL/Drivers       | 하드웨어 초기화 및 MCU 주변 장치 제어 (GPIO, 타이머, UART 등) | `driver/` (gpio, timer, uart, pwm)              |
+| Hardware          | 물리적 하드웨어 (MCU, 센서 등)                                | AVR Atmega128/A, TC1602A-01T, etc.              |
 
 #### Applied Design Pattern
 
-The **Model-View-Presenter (MVP) + Service** pattern is used in the `app/fanMachine` directory to structure and organize the application logic. This design allows for a clean separation of responsibilities, making the system modular, testable, and maintainable.
+`app/fanMachine` 디렉터리에서 **모델-뷰-프레젠터(MVP) + 서비스** 패턴을 사용하여 애플리케이션 로직을 구조화하고 조직화.
 
-1. **Model (`model/`)**:
+1. **모델 (`model/`)**:
 
-   - Encapsulates the fan's state and data (e.g., speed, control mode, shutdown timer).
-   - Provides getter and setter methods for managing internal states.
-   - Example:
+   - 팬의 상태와 데이터(예: 속도, 제어 모드, 종료 타이머)를 캡슐화.
+   - 내부 상태를 관리하기 위한 getter 및 setter 메서드를 제공.
+   - 예:
      ```c
      uint8_t getFanSpeedState() {
          return _fanSpeedState;
@@ -220,13 +220,13 @@ The **Model-View-Presenter (MVP) + Service** pattern is used in the `app/fanMach
          _fanSpeedState = fanSpeedState;
      }
      ```
-   - **Responsibility**: Centralized state management.
+   - **책임**: 중앙 집중식 상태 관리.
 
-2. **View (`listener/`)**:
+2. **뷰 (`listener/`)**:
 
-   - Monitors user inputs (e.g., button presses, UART commands) and notifies the `Presenter` of changes.
-   - Acts as an event listener for external interactions.
-   - Example:
+   - 사용자 입력(예: 버튼 누름, UART 명령)을 모니터링하고 `Presenter`에 변경 사항을 알림.
+   - 외부 상호작용을 위한 이벤트 리스너 역할.
+   - 예:
      ```c
      static void _fanListener_checkButtonEvent() {
          switch (releasedBtnPinNum) {
@@ -239,13 +239,13 @@ The **Model-View-Presenter (MVP) + Service** pattern is used in the `app/fanMach
          }
      }
      ```
-   - **Responsibility**: Handling user interactions and notifying the presenter.
+   - **책임**: 사용자 상호작용 처리 및 프레젠터 알림.
 
-3. **Presenter (`presenter/`)**:
+3. **프레젠터 (`presenter/`)**:
 
-   - Coordinates communication between the `Model` and `View`.
-   - Updates the `Model` based on user input or system events and prepares data for presentation.
-   - Example:
+   - `모델`과 `뷰` 간의 통신을 조정.
+   - 사용자 입력 또는 시스템 이벤트에 따라 `모델`을 업데이트하고 표시할 데이터를 준비.
+   - 예:
      ```c
      void fanPresenter_displaytoLcd(uint8_t minute, uint8_t second) {
          char buff[30];
@@ -253,12 +253,12 @@ The **Model-View-Presenter (MVP) + Service** pattern is used in the `app/fanMach
          lcd.writeLcdStringToXy(&lcd, buff, 1, 2);
      }
      ```
-   - **Responsibility**: Business logic coordination and data preparation.
+   - **책임**: 비즈니스 로직 조정 및 데이터 준비.
 
-4. **Service (`service/`)**:
-   - Encapsulates reusable logic, such as timer management, motor speed control, and UART communication.
-   - Provides advanced features like auto mode cycling and shutdown timer handling.
-   - Example:
+4. **서비스 (`service/`)**:
+   - 타이머 관리, 모터 속도 제어, UART 통신 등의 재사용 가능한 로직을 캡슐화.
+   - 자동 모드 순환 및 종료 타이머 처리와 같은 고급 기능을 제공.
+   - 예:
      ```c
      void _fanService_updateByCurrentState() {
          if (fanControlModeState == FAN_CONTROL_MODE_AUTO && fanControlAutoModeTimer.second >= fanControlModeAutoCycleSecond) {
@@ -267,30 +267,30 @@ The **Model-View-Presenter (MVP) + Service** pattern is used in the `app/fanMach
          }
      }
      ```
-   - **Responsibility**: Core reusable logic and advanced features.
+   - **책임**: 핵심 재사용 로직 및 고급 기능.
 
 ---
 
-#### ❗ Benefits of the MVP + Service Pattern
+#### ❗ Advantages of MVP + Service Pattern
 
-1. **Separation of Concerns**:
+1. **관심사의 분리**:
 
-   - Each component (Model, View, Presenter, Service) has a distinct responsibility, reducing complexity.
+   - 각 구성 요소(모델, 뷰, 프레젠터, 서비스)는 명확한 책임을 가지며 복잡성을 줄임.
 
-2. **Modularity**:
+2. **모듈성**:
 
-   - Independent components allow for easier modifications, such as adding new features or replacing individual layers.
+   - 독립적인 구성 요소는 새로운 기능 추가 또는 개별 계층 교체를 쉽게 만듦.
 
-3. **Testability**:
+3. **테스트 가능성**:
 
-   - Core logic in the `Service` layer and state management in the `Model` layer can be tested in isolation.
+   - `서비스` 계층의 핵심 로직과 `모델` 계층의 상태 관리는 독립적으로 테스트 가능.
 
-4. **Reusability**:
+4. **재사용성**:
 
-   - Services like `fanService` are designed for reuse in similar applications or machines.
+   - `fanService`와 같은 서비스는 유사한 애플리케이션 또는 기계에서 재사용 가능.
 
-5. **Scalability**:
-   - Adding new features (e.g., additional fan modes or advanced timers) is straightforward due to the layered architecture.
+5. **확장성**:
+   - 추가 팬 모드 또는 고급 타이머와 같은 새로운 기능 추가가 계층형 아키텍처 덕분에 간단.
 
 ---
 
@@ -298,46 +298,46 @@ The **Model-View-Presenter (MVP) + Service** pattern is used in the `app/fanMach
 
 ### 📌 Key Learnings and Improvements
 
-1. **Hardware Documentation**
+1. **하드웨어 문서화**
 
-   ➡️ Prepare comprehensive documentation for hardware models, including **datasheet links**, to improve team accessibility and understanding.
+   ➡️ 하드웨어 모델에 대한 포괄적인 문서 작성, **데이터시트 링크 포함**, 팀의 접근성과 이해를 향상시키는 작업.
 
-   - Ensure the hardware model and its specifications are well-documented.
+   - 하드웨어 모델과 그 사양이 잘 문서화되어 있는지 확인하는 작업.
 
-2. **Directory Naming Conventions**
+2. **디렉터리 명명 규칙**
 
-   ➡️ Use consistent and standard terminology across future projects to improve clarity.
+   ➡️ 향후 프로젝트에서 일관적이고 표준화된 용어 사용으로 명확성을 개선하는 작업.
 
-   - The directory name "peripheral" was used in this project but caused confusion, as it often refers to hardware registers in embedded systems.
-   - Future projects should adopt more standard and widely accepted terms, such as ❗ **"device"**, which is frequently used for hardware components.
-     - Example from Wiktionary:
-       - [Device](https://en.wiktionary.org/wiki/device): A peripheral device; an item of hardware.
-       - [Peripheral Device](https://en.wiktionary.org/wiki/peripheral_device#English): An external electronic device used by a computer.
+   - 이 프로젝트에서 "peripheral"이라는 디렉터리 이름이 사용되었으나, 임베디드 시스템에서 종종 하드웨어 레지스터를 의미하기 때문에 혼란을 초래함.
+   - 향후 프로젝트에서는 ❗ **"device"**와 같은 더 표준적이고 널리 사용되는 용어를 채택해야 함.
+     - 예시 (Wiktionary 참조):
+       - [Device](https://en.wiktionary.org/wiki/device): 주변 장치; 하드웨어 항목.
+       - [Peripheral Device](https://en.wiktionary.org/wiki/peripheral_device#English): 컴퓨터에서 사용하는 외부 전자 장치.
 
-3. **Naming Conventions in C for OOP Concepts**
+3. **C에서의 OOP 개념을 위한 명명 규칙**
 
-   ➡️ Investigate industry-standard naming conventions for embedded systems to ensure best practices.
+   ➡️ 임베디드 시스템에서 산업 표준 명명 규칙을 조사하여 모범 사례를 확보하는 작업.
 
-   - Attempting to follow OOP principles in C presented challenges, especially due to the lack of encapsulation in structs.
-   - 🚣 Adopted a naming convention where the module name (PascalCase) is prefixed to the function name (camelCase) to simulate OOP structure.
-   - Example:
+   - C에서 OOP 원칙을 따르려는 시도는 특히 구조체의 캡슐화 부족으로 인해 어려움이 있었음.
+   - 🚣 모듈 이름(PascalCase)을 함수 이름(camelCase)에 접두어로 붙여 OOP 구조를 모방하는 명명 규칙 채택.
+   - 예시:
      ```c
      static void _Fnd_setFndNum(fnd_t* fnd, uint16_t value) {
          fnd->value = value;
      }
      ```
 
-4. **FSM Design Challenges**
+4. **FSM 설계 과제**
 
-   ➡️ Explore alternatives to simplify FSM design further while maintaining functionality.
+   ➡️ 기능을 유지하면서 FSM 설계를 더욱 간단하게 만들 대안을 탐색하는 작업.
 
-   - The initial FSM design was overly complex and difficult to manage (see [Previous FSM Diagram](resource/previous_FSM.png)).
-   - After re-evaluating the design, it became evident that a more **intuitive and simple structure** was possible.
-   - **Lesson**: Invest more time in thoughtful design before implementation. Refer to 🔗 "\[FSM \(Finite State Machine\)\]" for the improved and cleaner FSM.
+   - 초기 FSM 설계는 지나치게 복잡하고 관리하기 어려웠음(참조: [이전 FSM 다이어그램](resource/previous_FSM.png)).
+   - 설계를 재평가한 후, 더 **직관적이고 단순한 구조**가 가능함이 드러남.
+   - **교훈**: 구현 전에 더 많은 시간을 들여 신중하게 설계하는 작업. 개선되고 간결한 FSM은 🔗 "\[FSM \(Finite State Machine\)\]"에서 참조 가능.
 
-5. **Efficient Display Management**
+5. **인터럽트 처리와 디스플레이 효율 개선**
 
-   - Issues arose with FND display efficiency, such as atomicity concerns and redundant calculations.
-   - 💡 **Minimize calculations inside interrupts**, and if complex calculations are necessary, increase intervals to avoid interference with other time-sensitive tasks.
+   - FND 디스플레이 효율성과 관련하여 원자성 문제 및 불필요한 계산과 같은 이슈가 발생함.
+   - 💡 **인터럽트 내부에서의 계산 최소화** 및 복잡한 계산이 필요한 경우 간격을 늘려 다른 시간에 민감한 작업과의 간섭을 방지하는 작업.
 
 ---
