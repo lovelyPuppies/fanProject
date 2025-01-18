@@ -83,7 +83,7 @@ _Click on the image above to watch the full demo on [YouTube](https://youtu.be/h
 
 📝 **참고**: 명시적인 전환이 정의되지 않는 한 상태는 변경되지 않음.
 
-#### 🎛️ Inputs (Button Definitions)
+#### 🕹️ Inputs (Button Definitions)
 
 | **버튼** | **기능**                                  |
 | -------- | ----------------------------------------- |
