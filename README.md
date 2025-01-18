@@ -11,7 +11,7 @@
     - [🎥 Fan Machine Demo](#-fan-machine-demo)
   - [🌐 Project Overview](#-project-overview)
     - [FSM (Finite State Machine)](#fsm-finite-state-machine)
-      - [🎛️ Inputs (Button Definitions)](#️-inputs-button-definitions)
+      - [🕹️ Inputs (Button Definitions)](#️-inputs-button-definitions)
       - [📊 Diagram](#-diagram)
     - [🛠️ Tools](#️-tools)
       - [🧑‍💻 Software](#-software)
